@@ -1,6 +1,6 @@
 import "./Loading.css";
 import gsap from "gsap";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import logoWhite from "../../assets/cokeLogoWhite.png"
 
@@ -8,41 +8,35 @@ gsap.registerPlugin(ScrollTrigger);
 
 function Loading() {
     const loadingInnerRef = useRef(null);
-    const axosdRef = useRef(null);
-    const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        // Animation for letter spans
-        const spans = axosdRef.current.querySelectorAll('span');
-        gsap.fromTo(spans, {
-            y: 26
+        gsap.fromTo("#axosd span", {
+            top: "26px"
         }, {
-            y: 0,
+            top: "0px",
             duration: 1.5,
             ease: "power3.inOut",
             stagger: 0.01
         });
 
-        // Add load event listener to window
-        const handleLoad = () => {
-            setIsLoaded(true);
-            gsap.to(loadingInnerRef.current, {
+        // Check if document is already fully loaded
+        if (document.readyState === "complete") {
+            gsap.to(".loadingInner", {
                 width: "100%",
                 ease: "power4.inOut",
-                duration: 1,
-                onComplete: () => {
-                    // Optional: You might want to hide or remove the loading screen
-                }
+                duration: 1
             });
-        };
+        } else {
+            // If not fully loaded, wait for the 'load' event
+            window.addEventListener("load", () => {
+                gsap.to(".loadingInner", {
+                    width: "100%",
+                    ease: "power4.inOut",
+                    duration: 1
+                });
+            });
+        }
 
-        // Add event listener
-        window.addEventListener('load', handleLoad);
-
-        // Cleanup event listener
-        return () => {
-            window.removeEventListener('load', handleLoad);
-        };
     }, []);
 
     return (
@@ -56,14 +50,12 @@ function Loading() {
                         <div
                             ref={loadingInnerRef}
                             className="loadingInner"
-                            style={{
-                                width: isLoaded ? '0%' : '0%'
-                            }}
+
                         >
                         </div>
                     </div>
                     <div className="msg">
-                        <span ref={axosdRef} id="axosd">
+                        <span id="axosd">
                             <span>L</span>
                             <span>O</span>
                             <span>A</span>
