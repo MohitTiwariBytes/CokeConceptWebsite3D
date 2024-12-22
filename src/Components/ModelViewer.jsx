@@ -3,17 +3,15 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { gsap } from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
+import { useModelStore } from './store';
 
-gsap.registerPlugin(ScrollTrigger)
-
-
-let isLoaded;
+gsap.registerPlugin(ScrollTrigger);
 
 function ModelViewer() {
     const mountRef = useRef(null);
     const modelRef = useRef(null);
     const outlineModelRef = useRef(null);
-    isLoaded = false;
+    const setLoadingProgress = useModelStore((state) => state.setLoadingProgress);
 
     useEffect(() => {
         const scene = new THREE.Scene();
@@ -60,6 +58,7 @@ function ModelViewer() {
                 outlineModelRef.current = outlineModel;
 
                 updateScale();
+
                 window.addEventListener('resize', updateScale);
 
                 model.traverse((child) => {
@@ -79,38 +78,23 @@ function ModelViewer() {
                 });
 
                 outlineModel.rotation.z = 13;
+
                 scene.add(outlineModel);
                 scene.add(model);
+
                 model.rotation.z = 13;
 
-                // Set loading state to true and notify parent
-                isLoaded = true
-
-                gsap.set([model.position, outlineModel.position], { y: -15 })
+                gsap.set([model.position, outlineModel.position], { y: -15 });
 
                 const checkPositionInterval = setInterval(() => {
                     const loadingEl = document.querySelector('.main-loading');
                     if (loadingEl) {
                         const topValue = window.getComputedStyle(loadingEl).top;
                         const loadingElHeight = loadingEl.clientHeight;
+                        // Check if the element's top is -100% (fully off-screen)
 
                         if (topValue === `-${loadingElHeight}px`) {
-                            clearInterval(checkPositionInterval);
-
-                            gsap.fromTo([model.position, outlineModel.position], {
-                                y: 0,
-                                rotateX: -23
-                            }, {
-                                y: 10,
-                                rotateX: 23,
-                                duration: 1.5,
-                                ease: 'power2.out',
-                                scrollTrigger: {
-                                    trigger: ".kioskada",
-                                    start: "top top",
-                                    scrub: true
-                                }
-                            })
+                            clearInterval(checkPositionInterval); // Stop checking once the condition is met
 
                             gsap.fromTo(
                                 [model.position, outlineModel.position],
@@ -133,13 +117,14 @@ function ModelViewer() {
                             );
                         }
                     }
-                }, 100);
+                }, 100); // Check every 100ms until the .main-loading reaches -100%
             },
-            undefined,
+            (xhr) => {
+                const progress = (xhr.loaded / xhr.total) * 100;
+                setLoadingProgress(progress); // Update progress in Zustand store
+            },
             (error) => {
                 console.error('Error loading model:', error);
-                // Set loading state to false on error and notify parent
-                isLoaded = false;
             }
         );
 
@@ -168,9 +153,10 @@ function ModelViewer() {
         return () => {
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('resize', updateScale);
+            // eslint-disable-next-line react-hooks/exhaustive-deps
             mountRef.current.removeChild(renderer.domElement);
         };
-    },);
+    }, [setLoadingProgress]);
 
     return (
         <div
@@ -189,5 +175,4 @@ function ModelViewer() {
     );
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
-export { ModelViewer, isLoaded };
+export default ModelViewer;

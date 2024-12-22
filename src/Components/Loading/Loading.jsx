@@ -3,12 +3,14 @@ import gsap from "gsap";
 import { useEffect, useRef } from "react";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import logoWhite from "../../assets/cokeLogoWhite.png"
-import { isLoaded } from "../ModelViewer";
+import { useModelStore } from "../store";
 
 gsap.registerPlugin(ScrollTrigger);
 
 function Loading() {
     const loadingInnerRef = useRef(null);
+    const loadingProgress = useModelStore((state) => state.loadingProgress);
+
 
     useEffect(() => {
         gsap.fromTo("#axosd span", {
@@ -21,7 +23,7 @@ function Loading() {
         });
 
         // Check if document is already fully loaded
-        if (document.readyState === "complete" && isLoaded) {
+        if (document.readyState === "complete" && loadingProgress === 100) {
             gsap.to(".loadingInner", {
                 width: "100%",
                 ease: "power4.inOut",
