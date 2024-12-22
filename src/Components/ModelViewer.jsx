@@ -6,10 +6,14 @@ import ScrollTrigger from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger)
 
+
+let isLoaded;
+
 function ModelViewer() {
     const mountRef = useRef(null);
     const modelRef = useRef(null);
     const outlineModelRef = useRef(null);
+    isLoaded = false;
 
     useEffect(() => {
         const scene = new THREE.Scene();
@@ -55,10 +59,7 @@ function ModelViewer() {
                 const outlineModel = model.clone();
                 outlineModelRef.current = outlineModel;
 
-                // Initial scale setup
                 updateScale();
-
-                // Add resize event listener
                 window.addEventListener('resize', updateScale);
 
                 model.traverse((child) => {
@@ -78,23 +79,23 @@ function ModelViewer() {
                 });
 
                 outlineModel.rotation.z = 13;
-
                 scene.add(outlineModel);
                 scene.add(model);
-
                 model.rotation.z = 13;
 
-                gsap.set([model.position, outlineModel.position], { y: -15, })
-                // Start checking the position of loadingEl
+                // Set loading state to true and notify parent
+                isLoaded = true
+
+                gsap.set([model.position, outlineModel.position], { y: -15 })
+
                 const checkPositionInterval = setInterval(() => {
                     const loadingEl = document.querySelector('.main-loading');
                     if (loadingEl) {
                         const topValue = window.getComputedStyle(loadingEl).top;
                         const loadingElHeight = loadingEl.clientHeight;
-                        // Check if the element's top is -100% (fully off-screen)
 
                         if (topValue === `-${loadingElHeight}px`) {
-                            clearInterval(checkPositionInterval); // Stop checking once the condition is met
+                            clearInterval(checkPositionInterval);
 
                             gsap.fromTo([model.position, outlineModel.position], {
                                 y: 0,
@@ -132,11 +133,13 @@ function ModelViewer() {
                             );
                         }
                     }
-                }, 100); // Check every 100ms until the .main-loading reaches -100%
+                }, 100);
             },
             undefined,
             (error) => {
                 console.error('Error loading model:', error);
+                // Set loading state to false on error and notify parent
+                isLoaded = false;
             }
         );
 
@@ -167,7 +170,7 @@ function ModelViewer() {
             window.removeEventListener('resize', updateScale);
             mountRef.current.removeChild(renderer.domElement);
         };
-    }, []);
+    },);
 
     return (
         <div
@@ -186,4 +189,5 @@ function ModelViewer() {
     );
 }
 
-export default ModelViewer;
+// eslint-disable-next-line react-refresh/only-export-components
+export { ModelViewer, isLoaded };

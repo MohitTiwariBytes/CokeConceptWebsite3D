@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import ModelViewer from '../../../Components/ModelViewer';
+import { ModelViewer } from '../../../Components/ModelViewer';
 import gsap from 'gsap';
 import "./FirstSection.css"
 import ScrollTrigger from 'gsap/ScrollTrigger';

@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { useEffect, useRef } from "react";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import logoWhite from "../../assets/cokeLogoWhite.png"
+import { isLoaded } from "../ModelViewer";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,7 +21,7 @@ function Loading() {
         });
 
         // Check if document is already fully loaded
-        if (document.readyState === "complete") {
+        if (document.readyState === "complete" && isLoaded) {
             gsap.to(".loadingInner", {
                 width: "100%",
                 ease: "power4.inOut",
