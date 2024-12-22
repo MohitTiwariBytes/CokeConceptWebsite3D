@@ -29,11 +29,34 @@
     overflow: hidden;
 }
 
+.bottom-load{
+    width: 100%;
+    height: 100px;
+    position: absolute;
+    bottom: 0;
+}
+
+.daisdaf{
+    width: 200px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.daisdaf span{
+    font-size: 24px;
+    font-family: "Monique";
+    color: white;
+}
+
 .msg{
     font-family: "JetBrains Mono", monospace;
     color: rgb(202, 202, 202);
     font-size: 12px;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .asd{

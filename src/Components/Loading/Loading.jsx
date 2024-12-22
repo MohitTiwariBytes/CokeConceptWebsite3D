@@ -64,6 +64,12 @@ function Loading() {
     return (
         <div className="main-loading">
             <div className="loading">
+
+                <div className="bottom-load">
+                    <div className="daisdaf">
+                        <span>{loadingProgress.toFixed(2)}%</span>
+                    </div>
+                </div>
                 <div className="asd">
                     <div className="img">
                         <img height={"300px"} src={logoWhite} alt="" />
@@ -72,7 +78,6 @@ function Loading() {
                         <div
                             ref={loadingInnerRef}
                             className="loadingInner"
-
                         >
                         </div>
                     </div>
@@ -89,7 +94,9 @@ function Loading() {
                             <span>.</span>
                             <span>.</span>
                         </span>
+
                     </div>
+
                 </div>
 
             </div>
