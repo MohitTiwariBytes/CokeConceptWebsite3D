@@ -1,4 +1,172 @@
 .main-first-section{
     width: 100%;
     height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.firstSection{
+    width: 90%;
+    height: 100%;
+    position: relative;
+    z-index: 40;
+    max-width: 2400px;
+}
+
+.bottom-asdfm-left{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+}
+
+.acxaiosd{
+    width: 100%;
+    height: 50%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    z-index: 10;
+}
+
+.rasadWrapper{
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#adoad h1{
+    font-family: "Coca Cola";
+    font-weight: 400;
+    font-size: 300px;
+    position: relative;
+}
+
+#adoad{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    color: #bb1010;
+}
+
+#asmai{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.rasad{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    overflow: hidden;
+}
+
+.desc{
+    padding: 15px;
+}
+
+#asdads{
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    width: 600px;
+}
+
+#idk span{
+    font-size: 16px;
+    position: relative;
+}
+
+
+#asmai h1{
+    position: relative;
+}
+
+.rasad h1{
+    font-family: "Monique";
+    font-weight: 500;
+    font-size: 50px;
+}
+
+.asdua{
+    margin-top: 23px;
+}
+
+
+.scro{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: flex-end;
+    font-family: "Monique";
+    flex-wrap: wrap;
+    margin-top: -13px;
+}
+
+.asda-text{
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: -22px;
+}
+
+
+.btn{
+    opacity: 0;
+}
+
+#oaja h1{
+    position: relative;
+}
+
+#oaja{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1px;
+    font-size: 18px;
+    overflow: hidden;
+}
+
+@media (max-width: 1164px) {
+    #adoad h1{
+        font-size: 26.2vw;
+    }
+}
+
+@media (max-width: 665px) {
+    .rasad h1{
+        font-size: 37px;
+    }
+
+    #idk span{
+        font-size: 12px;
+    }
+
+    #asdads{
+
+        width: 90%;
+    }
+
+    .scro h1{
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 435px) {
+    #asdads{
+        width: 100%;
+    }
+}
+
+@media (max-width: 1482px) {
+    .rasadWrapper{
+        height: 300px;
+    }
 }

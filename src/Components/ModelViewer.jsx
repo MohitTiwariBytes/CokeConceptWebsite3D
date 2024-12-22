@@ -2,9 +2,14 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { gsap } from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger)
 
 function ModelViewer() {
     const mountRef = useRef(null);
+    const modelRef = useRef(null);
+    const outlineModelRef = useRef(null);
 
     useEffect(() => {
         const scene = new THREE.Scene();
@@ -28,13 +33,33 @@ function ModelViewer() {
         scene.add(pointLight);
 
         const loader = new GLTFLoader();
-        let model, outlineModel;
+
+        const updateScale = () => {
+            if (modelRef.current && outlineModelRef.current) {
+                if (window.innerWidth <= 600) {
+                    modelRef.current.scale.set(1.4, 1.4, 1.4);
+                    outlineModelRef.current.scale.set(1.42, 1.42, 1.42);
+                } else {
+                    modelRef.current.scale.set(1.8, 1.8, 1.8);
+                    outlineModelRef.current.scale.set(1.83, 1.83, 1.83);
+                }
+            }
+        };
 
         loader.load(
             '../assets/realistic_3d_coca-cola_can.glb',
             (gltf) => {
-                model = gltf.scene;
-                model.scale.set(1.8, 1.8, 1.8);
+                const model = gltf.scene;
+                modelRef.current = model;
+
+                const outlineModel = model.clone();
+                outlineModelRef.current = outlineModel;
+
+                // Initial scale setup
+                updateScale();
+
+                // Add resize event listener
+                window.addEventListener('resize', updateScale);
 
                 model.traverse((child) => {
                     if (child.isMesh) {
@@ -43,16 +68,15 @@ function ModelViewer() {
                     }
                 });
 
-                outlineModel = model.clone();
                 outlineModel.traverse((child) => {
                     if (child.isMesh) {
                         child.material = new THREE.MeshBasicMaterial({
-                            color: 0x000000, // Red color
+                            color: 0x000000,
                             side: THREE.BackSide,
                         });
                     }
                 });
-                outlineModel.scale.set(1.82, 1.82, 1.82);
+
                 outlineModel.rotation.z = 13;
 
                 scene.add(outlineModel);
@@ -60,25 +84,55 @@ function ModelViewer() {
 
                 model.rotation.z = 13;
 
-                gsap.fromTo(
-                    [model.position, outlineModel.position],
-                    { y: -10, rotateX: -23 },
-                    {
-                        y: 0,
-                        rotate: 0,
-                        duration: 1.5,
-                        ease: 'power2.out',
-                        onComplete: () => {
-                            gsap.to([model.position, outlineModel.position], {
-                                y: 0.6,
-                                duration: 2,
-                                repeat: -1,
-                                yoyo: true,
-                                ease: 'sine.inOut',
-                            });
-                        },
+                gsap.set([model.position, outlineModel.position], { y: -15, })
+                // Start checking the position of loadingEl
+                const checkPositionInterval = setInterval(() => {
+                    const loadingEl = document.querySelector('.main-loading');
+                    if (loadingEl) {
+                        const topValue = window.getComputedStyle(loadingEl).top;
+                        const loadingElHeight = loadingEl.clientHeight;
+                        // Check if the element's top is -100% (fully off-screen)
+
+                        if (topValue === `-${loadingElHeight}px`) {
+                            clearInterval(checkPositionInterval); // Stop checking once the condition is met
+
+                            gsap.fromTo([model.position, outlineModel.position], {
+                                y: 0,
+                                rotateX: -23
+                            }, {
+                                y: 10,
+                                rotateX: 23,
+                                duration: 1.5,
+                                ease: 'power2.out',
+                                scrollTrigger: {
+                                    trigger: ".kioskada",
+                                    start: "top top",
+                                    scrub: true
+                                }
+                            })
+
+                            gsap.fromTo(
+                                [model.position, outlineModel.position],
+                                { y: -15, rotateX: -23 },
+                                {
+                                    y: 0,
+                                    rotate: 0,
+                                    duration: 1.5,
+                                    ease: 'power2.out',
+                                    onComplete: () => {
+                                        gsap.to([model.position, outlineModel.position], {
+                                            y: 0.6,
+                                            duration: 2,
+                                            repeat: -1,
+                                            yoyo: true,
+                                            ease: 'sine.inOut',
+                                        });
+                                    },
+                                }
+                            );
+                        }
                     }
-                );
+                }, 100); // Check every 100ms until the .main-loading reaches -100%
             },
             undefined,
             (error) => {
@@ -87,11 +141,11 @@ function ModelViewer() {
         );
 
         const handleMouseMove = (event) => {
-            if (model) {
+            if (modelRef.current && outlineModelRef.current) {
                 const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
                 const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
 
-                gsap.to([model.rotation, outlineModel.rotation], {
+                gsap.to([modelRef.current.rotation, outlineModelRef.current.rotation], {
                     x: mouseY * 0.3,
                     y: mouseX * 0.5,
                     duration: 0.5,
@@ -110,6 +164,7 @@ function ModelViewer() {
 
         return () => {
             window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('resize', updateScale);
             mountRef.current.removeChild(renderer.domElement);
         };
     }, []);
@@ -117,8 +172,9 @@ function ModelViewer() {
     return (
         <div
             ref={mountRef}
+            className='kioskada'
             style={{
-                position: 'fixed',
+                position: 'absolute',
                 top: 0,
                 left: 0,
                 width: '100vw',

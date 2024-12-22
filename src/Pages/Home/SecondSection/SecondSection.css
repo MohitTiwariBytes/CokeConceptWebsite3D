@@ -1,0 +1,103 @@
+.main-second-section{
+    width: 100%;
+    height: 200%;
+    display: flex;
+    justify-content: center;
+}
+
+.secondSection{
+    width: 90%;
+    height: 50%;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    max-width: 1800px;
+}
+
+#coca-cola-asdadsd{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    width: 1000px;
+    font-size: 23px;
+}
+
+.imagesRight{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+    align-items: center;
+    left: 0;
+    overflow: hidden;
+}
+
+.wrapper-hoas{
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    align-items: center;
+    width: 410px;
+    gap: 23px;
+}
+
+.image{
+    position: relative;
+}
+
+
+
+.image img{
+    width: 410px;
+    border-radius: 23px;
+}
+
+.image1 img{
+    width: 410px;
+    border-radius: 23px;
+    display: none;
+}
+
+.text-adoa{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width:1701px) {
+    #coca-cola-asdadsd{
+        width: 60%;
+    }
+}
+
+
+@media (max-width: 1472px) {
+    #coca-cola-asdadsd{
+        width: 100%;
+    }
+
+    .secondSection{
+        flex-direction: column-reverse;
+    }
+
+    .text-adoa{
+        height: 100%;
+    }
+
+    .imagesRight{
+        height: 100%;
+        position: relative;
+        justify-content: flex-start;
+    }
+
+    .image img{
+        width: 400px;
+    }
+
+    .wrapper-hoas{
+        width: 100%;
+    }
+}

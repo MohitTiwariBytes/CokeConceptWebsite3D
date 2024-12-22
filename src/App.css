@@ -3,7 +3,27 @@
   padding: 0;
 }
 
+body{
+  overflow-x: hidden;
+  background-color: #C2C2C4;
+}
+
 html, body, #root{
   width: 100%;
   height: 100%;
+}
+
+@font-face {
+  font-family: "Coca Cola";
+  src: url("./assets/Fonts/CocaCola.ttf");
+}
+
+@font-face {
+  font-family: "Monique";
+  src: url("./assets/Fonts/monique.otf");
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("./assets/Fonts/Satoshi-Variable.ttf");
 }

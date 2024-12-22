@@ -24,15 +24,34 @@ function Loading() {
             gsap.to(".loadingInner", {
                 width: "100%",
                 ease: "power4.inOut",
-                duration: 1
+                duration: 1,
             });
         } else {
-            // If not fully loaded, wait for the 'load' event
             window.addEventListener("load", () => {
                 gsap.to(".loadingInner", {
                     width: "100%",
                     ease: "power4.inOut",
-                    duration: 1
+                    duration: 1,
+                    onComplete: () => {
+                        gsap.fromTo("#axosd span", {
+                            top: "0px"
+                        }, {
+                            top: "-100px",
+                            duration: 1.5,
+                            ease: "power3.inOut",
+                            stagger: 0.01,
+                            delay: 0.7,
+                            onComplete: () => {
+                                gsap.fromTo(".main-loading", {
+                                    top: "0",
+                                }, {
+                                    top: "-100%",
+                                    ease: "power3.inOut",
+                                    duration: 1,
+                                })
+                            }
+                        });
+                    }
                 });
             });
         }
@@ -69,6 +88,7 @@ function Loading() {
                         </span>
                     </div>
                 </div>
+
             </div>
         </div>
     );
