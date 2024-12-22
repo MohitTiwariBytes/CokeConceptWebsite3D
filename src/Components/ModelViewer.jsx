@@ -120,8 +120,11 @@ function ModelViewer() {
                 }, 100); // Check every 100ms until the .main-loading reaches -100%
             },
             (xhr) => {
-                const progress = (xhr.loaded / xhr.total) * 100;
-                setLoadingProgress(progress); // Update progress in Zustand store
+                let progress = 0;
+                if (xhr.total > 0) {
+                    progress = (xhr.loaded / xhr.total) * 100;
+                }
+                setLoadingProgress(Math.min(progress, 100)); // Cap progress at 100
             },
             (error) => {
                 console.error('Error loading model:', error);
