@@ -12,6 +12,7 @@ function ModelViewer() {
     const modelRef = useRef(null);
     const outlineModelRef = useRef(null);
     const setLoadingProgress = useModelStore((state) => state.setLoadingProgress);
+    const setIsModelLoaded = useModelStore((state) => state.setIsModelLoaded); // Zustand store flag for complete loading
 
     useEffect(() => {
         const scene = new THREE.Scene();
@@ -48,9 +49,12 @@ function ModelViewer() {
             }
         };
 
+        let isModelFullyLoaded = false;
+
         loader.load(
             '../assets/realistic_3d_coca-cola_can.glb',
             (gltf) => {
+                // Model is fully loaded here
                 const model = gltf.scene;
                 modelRef.current = model;
 
@@ -77,54 +81,29 @@ function ModelViewer() {
                     }
                 });
 
+                // Set initial rotation
+                model.rotation.z = 13;
                 outlineModel.rotation.z = 13;
 
                 scene.add(outlineModel);
                 scene.add(model);
 
-                model.rotation.z = 13;
-
+                // gsap set for initial positions
                 gsap.set([model.position, outlineModel.position], { y: -15 });
 
-                const checkPositionInterval = setInterval(() => {
-                    const loadingEl = document.querySelector('.main-loading');
-                    if (loadingEl) {
-                        const topValue = window.getComputedStyle(loadingEl).top;
-                        const loadingElHeight = loadingEl.clientHeight;
-                        // Check if the element's top is -100% (fully off-screen)
-
-                        if (topValue === `-${loadingElHeight}px`) {
-                            clearInterval(checkPositionInterval); // Stop checking once the condition is met
-
-                            gsap.fromTo(
-                                [model.position, outlineModel.position],
-                                { y: -15, rotateX: -23 },
-                                {
-                                    y: 0,
-                                    rotate: 0,
-                                    duration: 1.5,
-                                    ease: 'power2.out',
-                                    onComplete: () => {
-                                        gsap.to([model.position, outlineModel.position], {
-                                            y: 0.6,
-                                            duration: 2,
-                                            repeat: -1,
-                                            yoyo: true,
-                                            ease: 'sine.inOut',
-                                        });
-                                    },
-                                }
-                            );
-                        }
-                    }
-                }, 100); // Check every 100ms until the .main-loading reaches -100%
+                // Mark as fully loaded
+                isModelFullyLoaded = true;
+                setIsModelLoaded(true);
             },
             (xhr) => {
-                let progress = 0;
-                if (xhr.total > 0) {
-                    progress = (xhr.loaded / xhr.total) * 100;
+                // Update progress during loading
+                const progress = (xhr.loaded / xhr.total) * 100;
+                setLoadingProgress(progress);
+
+                // Double-check to ensure progress reaches 100 before setting as fully loaded
+                if (progress === 100 && isModelFullyLoaded) {
+                    setIsModelLoaded(true);
                 }
-                setLoadingProgress(Math.min(progress, 100)); // Cap progress at 100
             },
             (error) => {
                 console.error('Error loading model:', error);
@@ -147,6 +126,38 @@ function ModelViewer() {
 
         window.addEventListener('mousemove', handleMouseMove);
 
+        const checkPositionInterval = setInterval(() => {
+            const loadingEl = document.querySelector('.main-loading');
+            if (loadingEl) {
+                const topValue = window.getComputedStyle(loadingEl).top;
+                const loadingElHeight = loadingEl.clientHeight;
+                // Check if the element's top is -100% (fully off-screen)
+                if (topValue === `-${loadingElHeight}px`) {
+                    clearInterval(checkPositionInterval); // Stop checking once the condition is met
+
+                    gsap.fromTo(
+                        [modelRef.current.position, outlineModelRef.current.position],
+                        { y: -15, rotateX: -23 },
+                        {
+                            y: 0,
+                            rotate: 0,
+                            duration: 1.5,
+                            ease: 'power2.out',
+                            onComplete: () => {
+                                gsap.to([modelRef.current.position, outlineModelRef.current.position], {
+                                    y: 0.6,
+                                    duration: 2,
+                                    repeat: -1,
+                                    yoyo: true,
+                                    ease: 'sine.inOut',
+                                });
+                            },
+                        }
+                    );
+                }
+            }
+        }, 100); // Check every 100ms until the .main-loading reaches -100%
+
         const animate = () => {
             requestAnimationFrame(animate);
             renderer.render(scene, camera);
@@ -156,15 +167,16 @@ function ModelViewer() {
         return () => {
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('resize', updateScale);
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-            mountRef.current.removeChild(renderer.domElement);
+            if (mountRef.current) {
+                mountRef.current.removeChild(renderer.domElement);
+            }
         };
-    }, [setLoadingProgress]);
+    }, [setLoadingProgress, setIsModelLoaded]);
 
     return (
         <div
             ref={mountRef}
-            className='kioskada'
+            className="kioskada"
             style={{
                 position: 'absolute',
                 top: 0,
