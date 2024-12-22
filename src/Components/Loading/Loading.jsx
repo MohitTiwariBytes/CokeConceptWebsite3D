@@ -22,15 +22,8 @@ function Loading() {
             stagger: 0.01
         });
 
-        // Check if document is already fully loaded
-        if (document.readyState === "complete" && loadingProgress === 100) {
-            gsap.to(".loadingInner", {
-                width: "100%",
-                ease: "power4.inOut",
-                duration: 1,
-            });
-        } else {
-            window.addEventListener("load", () => {
+        const triggerLoadingAnimation = () => {
+            if (loadingProgress === 100.00) {
                 gsap.to(".loadingInner", {
                     width: "100%",
                     ease: "power4.inOut",
@@ -51,15 +44,25 @@ function Loading() {
                                     top: "-100%",
                                     ease: "power3.inOut",
                                     duration: 1,
-                                })
+                                });
                             }
                         });
                     }
                 });
-            });
+            }
+        };
+
+        // Check if document is already fully loaded and loadingProgress is 100
+        if (document.readyState === "complete") {
+            triggerLoadingAnimation();
+        } else {
+            window.addEventListener("load", triggerLoadingAnimation);
         }
 
-    }, []);
+        return () => {
+            window.removeEventListener("load", triggerLoadingAnimation);
+        };
+    }, [loadingProgress]);
 
     return (
         <div className="main-loading">
