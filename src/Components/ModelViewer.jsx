@@ -12,7 +12,7 @@ function ModelViewer() {
     const modelRef = useRef(null);
     const outlineModelRef = useRef(null);
     const setLoadingProgress = useModelStore((state) => state.setLoadingProgress);
-    const setIsModelLoaded = useModelStore((state) => state.setIsModelLoaded); // Zustand store flag for complete loading
+    const setIsModelLoaded = useModelStore((state) => state.setIsModelLoaded);
 
     useEffect(() => {
         const scene = new THREE.Scene();
@@ -54,7 +54,6 @@ function ModelViewer() {
         loader.load(
             '../assets/realistic_3d_coca-cola_can.glb',
             (gltf) => {
-                // Model is fully loaded here
                 const model = gltf.scene;
                 modelRef.current = model;
 
@@ -81,26 +80,44 @@ function ModelViewer() {
                     }
                 });
 
-                // Set initial rotation
                 model.rotation.z = 13;
                 outlineModel.rotation.z = 13;
 
                 scene.add(outlineModel);
                 scene.add(model);
 
-                // gsap set for initial positions
                 gsap.set([model.position, outlineModel.position], { y: -15 });
 
                 // Mark as fully loaded
                 isModelFullyLoaded = true;
                 setIsModelLoaded(true);
+
+                // Start the animation when model is fully loaded and progress is 100%
+                gsap.fromTo(
+                    [modelRef.current.position, outlineModelRef.current.position],
+                    { y: -15, rotateX: -23 },
+                    {
+                        y: 0,
+                        rotate: 0,
+                        duration: 1.5,
+                        ease: 'power2.out',
+                        delay: 5,
+                        onComplete: () => {
+                            gsap.to([modelRef.current.position, outlineModelRef.current.position], {
+                                y: 0.6,
+                                duration: 2,
+                                repeat: -1,
+                                yoyo: true,
+                                ease: 'sine.inOut',
+                            });
+                        },
+                    }
+                );
             },
             (xhr) => {
-                // Update progress during loading
                 const progress = (xhr.loaded / xhr.total) * 100;
                 setLoadingProgress(Math.min(progress, 100));
 
-                // Double-check to ensure progress reaches 100 before setting as fully loaded
                 if (progress === 100 && isModelFullyLoaded) {
                     setIsModelLoaded(true);
                 }
@@ -125,38 +142,6 @@ function ModelViewer() {
         };
 
         window.addEventListener('mousemove', handleMouseMove);
-
-        const checkPositionInterval = setInterval(() => {
-            const loadingEl = document.querySelector('.main-loading');
-            if (loadingEl) {
-                const topValue = window.getComputedStyle(loadingEl).top;
-                const loadingElHeight = loadingEl.clientHeight;
-                // Check if the element's top is -100% (fully off-screen)
-                if (topValue === `-${loadingElHeight}px`) {
-                    clearInterval(checkPositionInterval); // Stop checking once the condition is met
-
-                    gsap.fromTo(
-                        [modelRef.current.position, outlineModelRef.current.position],
-                        { y: -15, rotateX: -23 },
-                        {
-                            y: 0,
-                            rotate: 0,
-                            duration: 1.5,
-                            ease: 'power2.out',
-                            onComplete: () => {
-                                gsap.to([modelRef.current.position, outlineModelRef.current.position], {
-                                    y: 0.6,
-                                    duration: 2,
-                                    repeat: -1,
-                                    yoyo: true,
-                                    ease: 'sine.inOut',
-                                });
-                            },
-                        }
-                    );
-                }
-            }
-        }, 100); // Check every 100ms until the .main-loading reaches -100%
 
         const animate = () => {
             requestAnimationFrame(animate);

@@ -1,7 +1,60 @@
- gsap.fromTo(".main-loading", {
-                            top: "0",
+gsap.fromTo("#adoad h1", {
+                            filter: "blur(22px)"
                         }, {
-                            top: "-100%",
-                            ease: "power3.inOut",
+                            filter: "blur(0px)",
+                            ease: "power2.inOut",
+                            duration: 0.7,
+                            stagger: 0.02
+                        })
+                        gsap.fromTo("#asmai h1", {
+                            top: "100px"
+                        }, {
+                            top: "0px",
+                            ease: "power2.inOut",
                             duration: 1,
+                            stagger: 0.01
+                        })
+                        gsap.fromTo("#idk span", {
+                            top: "100px"
+                        }, {
+                            top: "0px",
+                            ease: "power2.inOut",
+                            duration: 1,
+                            stagger: 0.01,
+                            delay: 0.8
+                        })
+                        gsap.fromTo("#oaja h1", {
+                            top: "100px"
+                        }, {
+                            top: "0px",
+                            ease: "power2.inOut",
+                            duration: 1,
+                            stagger: 0.01,
+                            delay: 0.8,
+                            onComplete: () => {
+                                gsap.fromTo("#oaja h1", {
+                                    top: "0px"
+                                }, {
+                                    top: "800px",
+                                    ease: "power2.inOut",
+                                    duration: 1,
+                                    stagger: 0.01,
+                                    delay: 1.2,
+                                    scrollTrigger: {
+                                        trigger: ".main-first-section",
+                                        start: "top top",
+                                        scrub: true
+                                    }
+                                })
+                            }
+                        })
+
+                        gsap.fromTo(".btn", {
+                            opacity: 0
+                        }, {
+                            opacity: 1,
+                            ease: "power4.inOut",
+                            duration: 1,
+                            stagger: 0.01,
+                            delay: 0.8
                         })
