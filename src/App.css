@@ -13,11 +13,11 @@ html, body, #root{
   height: 100%;
 }
 
+
 @font-face {
   font-family: "Coca Cola";
-  src: url("/assets/Fonts/CocaCola.ttf");
+  src: url("./assets/Fonts/CocaCola.ttf");
 }
-
 @font-face {
   font-family: "Monique";
   src: url("./assets//Fonts/monique.otf");
