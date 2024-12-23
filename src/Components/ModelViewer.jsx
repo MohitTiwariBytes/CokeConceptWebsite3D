@@ -103,7 +103,7 @@ function ModelViewer() {
                         rotate: 0,
                         duration: 1.5,
                         ease: 'power2.out',
-                        delay: 4.5,
+                        delay: 4,
                         onComplete: () => {
                             gsap.fromTo("#adoad h1", {
                                 filter: "blur(22px)"

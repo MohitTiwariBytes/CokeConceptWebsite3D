@@ -1,0 +1,81 @@
+.main-third-section {
+    display: flex;
+    width: 100%;
+    height: 200%;
+    justify-content: center;
+    position: relative; /* Added for absolute positioning context */
+}
+
+.thirdSection {
+    width: 100%;
+    height: 100%;
+    max-width: 2400px;
+    position: relative; /* Added for absolute positioning context */
+    z-index: 50;
+}
+
+.asdiad {
+    width: 100%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 50;
+}
+
+.asdiad h1 {
+    font-family: "Monique";
+    font-size: 8.2vw;
+}
+
+.brands {
+    position: absolute;
+    width: 100%;
+    height: 50%; /* Set fixed height to match images */
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Optional: adds space between images */
+    white-space: nowrap; /* Keeps images in a single line */
+    align-items: center;
+    justify-content: center;
+    z-index: 60;
+    transform: rotate(23deg);
+}
+
+.line1 {
+    display: flex;
+    flex-direction: row;
+    flex-shrink: 0; /* Prevents images from shrinking */
+    gap: 23px;
+}
+
+
+.line1 img {
+    height: 200px;
+    border-radius: 23px;
+    mix-blend-mode: color-burn;
+    object-fit: cover;
+    flex-shrink: 0; /* Prevents images from shrinking */
+    position: relative;
+    left: 33%;
+}
+
+.line2 {
+    display: flex;
+    flex-direction: row-reverse;
+    flex-shrink: 0; /* Prevents images from shrinking */
+    gap: 23px;
+    left: -23px;
+}
+
+
+.line2 img {
+    height: 200px;
+    border-radius: 23px;
+    mix-blend-mode: color-burn;
+    object-fit: cover;
+    flex-shrink: 0; /* Prevents images from shrinking */
+    position: relative;
+    left: -103%;
+}

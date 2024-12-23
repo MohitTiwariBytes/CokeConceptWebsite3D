@@ -1,17 +1,17 @@
 .main-second-section{
     width: 100%;
-    height: 200%;
+    height: 100%;
     display: flex;
     justify-content: center;
 }
 
 .secondSection{
     width: 90%;
-    height: 50%;
+    height: 100%;
     display: flex;
     flex-direction: row;
     position: relative;
-    max-width: 1800px;
+    max-width: 2400px;
 }
 
 #coca-cola-asdadsd{
