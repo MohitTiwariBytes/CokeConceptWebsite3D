@@ -98,7 +98,7 @@ function ModelViewer() {
             (xhr) => {
                 // Update progress during loading
                 const progress = (xhr.loaded / xhr.total) * 100;
-                setLoadingProgress(progress);
+                setLoadingProgress(Math.min(progress, 100));
 
                 // Double-check to ensure progress reaches 100 before setting as fully loaded
                 if (progress === 100 && isModelFullyLoaded) {
