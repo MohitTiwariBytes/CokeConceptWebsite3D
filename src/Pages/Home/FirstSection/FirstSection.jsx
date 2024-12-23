@@ -10,7 +10,6 @@ gsap.registerPlugin(ScrollTrigger)
 function FirstSection() {
 
     useEffect(() => {
-        let isLoaded = false;
 
         gsap.set("#adoad h1", { filter: "blur(22px)" })
         gsap.set("#asmai h1", { top: "100px" })
@@ -18,82 +17,6 @@ function FirstSection() {
         gsap.set("#oaja h1", { top: "100px" })
 
 
-        const checkPositionInterval = setInterval(() => {
-            const loadingEl = document.querySelector('.main-loading');
-            if (loadingEl) {
-                const topValue = window.getComputedStyle(loadingEl).top;
-                const loadingElHeight = loadingEl.clientHeight;
-                // Check if the element's top is -100% (fully off-screen)
-                if (topValue === `-${loadingElHeight}px`) {
-                    clearInterval(checkPositionInterval); // Stop checking once the condition is met
-                    isLoaded = true;
-                    if (isLoaded) {
-                        gsap.fromTo("#adoad h1", {
-                            filter: "blur(22px)"
-                        }, {
-                            filter: "blur(0px)",
-                            ease: "power2.inOut",
-                            duration: 0.7,
-                            stagger: 0.02
-                        })
-                        gsap.fromTo("#asmai h1", {
-                            top: "100px"
-                        }, {
-                            top: "0px",
-                            ease: "power2.inOut",
-                            duration: 1,
-                            stagger: 0.01
-                        })
-                        gsap.fromTo("#idk span", {
-                            top: "100px"
-                        }, {
-                            top: "0px",
-                            ease: "power2.inOut",
-                            duration: 1,
-                            stagger: 0.01,
-                            delay: 0.8
-                        })
-                        gsap.fromTo("#oaja h1", {
-                            top: "100px"
-                        }, {
-                            top: "0px",
-                            ease: "power2.inOut",
-                            duration: 1,
-                            stagger: 0.01,
-                            delay: 0.8,
-                            onComplete: () => {
-                                gsap.fromTo("#oaja h1", {
-                                    top: "0px"
-                                }, {
-                                    top: "800px",
-                                    ease: "power2.inOut",
-                                    duration: 1,
-                                    stagger: 0.01,
-                                    delay: 1.2,
-                                    scrollTrigger: {
-                                        trigger: ".main-first-section",
-                                        start: "top top",
-                                        scrub: true
-                                    }
-                                })
-                            }
-                        })
-
-                        gsap.fromTo(".btn", {
-                            opacity: 0
-                        }, {
-                            opacity: 1,
-                            ease: "power4.inOut",
-                            duration: 1,
-                            stagger: 0.01,
-                            delay: 0.8
-                        })
-
-
-                    }
-                }
-            }
-        }, 100);
 
 
 

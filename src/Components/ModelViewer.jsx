@@ -92,6 +92,8 @@ function ModelViewer() {
                 isModelFullyLoaded = true;
                 setIsModelLoaded(true);
 
+
+
                 // Start the animation when model is fully loaded and progress is 100%
                 gsap.fromTo(
                     [modelRef.current.position, outlineModelRef.current.position],
@@ -101,14 +103,76 @@ function ModelViewer() {
                         rotate: 0,
                         duration: 1.5,
                         ease: 'power2.out',
-                        delay: 5,
+                        delay: 4.5,
                         onComplete: () => {
+                            gsap.fromTo("#adoad h1", {
+                                filter: "blur(22px)"
+                            }, {
+                                filter: "blur(0px)",
+                                ease: "power2.inOut",
+                                duration: 0.7,
+                                stagger: 0.02
+                            })
+                            gsap.fromTo("#asmai h1", {
+                                top: "100px"
+                            }, {
+                                top: "0px",
+                                ease: "power2.inOut",
+                                duration: 1,
+                                stagger: 0.01
+                            })
+                            gsap.fromTo("#idk span", {
+                                top: "100px"
+                            }, {
+                                top: "0px",
+                                ease: "power2.inOut",
+                                duration: 1,
+                                stagger: 0.01,
+                                delay: 0.8
+                            })
+                            gsap.fromTo("#oaja h1", {
+                                top: "100px"
+                            }, {
+                                top: "0px",
+                                ease: "power2.inOut",
+                                duration: 1,
+                                stagger: 0.01,
+                                delay: 0.8,
+                                onComplete: () => {
+                                    gsap.fromTo("#oaja h1", {
+                                        top: "0px"
+                                    }, {
+                                        top: "800px",
+                                        ease: "power2.inOut",
+                                        duration: 1,
+                                        stagger: 0.01,
+                                        delay: 1.2,
+                                        scrollTrigger: {
+                                            trigger: ".main-first-section",
+                                            start: "top top",
+                                            scrub: true
+                                        }
+                                    })
+                                }
+                            })
+
+                            gsap.fromTo(".btn", {
+                                opacity: 0
+                            }, {
+                                opacity: 1,
+                                ease: "power4.inOut",
+                                duration: 1,
+                                stagger: 0.01,
+                                delay: 0.8
+                            })
+
                             gsap.to([modelRef.current.position, outlineModelRef.current.position], {
                                 y: 0.6,
                                 duration: 2,
                                 repeat: -1,
                                 yoyo: true,
                                 ease: 'sine.inOut',
+
                             });
                         },
                     }
