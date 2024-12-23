@@ -15,7 +15,7 @@ html, body, #root{
 
 @font-face {
   font-family: "Coca Cola";
-  src: url("./assets//Fonts/CocaCola.ttf");
+  src: url("/assets/Fonts/CocaCola.ttf");
 }
 
 @font-face {
